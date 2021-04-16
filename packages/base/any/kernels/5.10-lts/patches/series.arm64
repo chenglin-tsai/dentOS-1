@@ -16,3 +16,5 @@
 0020-accton-as5114.patch
 0021-tn48m-add-sfp-eeprom-support-to-ethtool.patch
 0022-delta-tn48m-dn-series-dts.patch
+0023-marvell-i2c-mv64xxx-add-addtional-bus-clock.patch
+0024-delta-ccba72-dts.patch

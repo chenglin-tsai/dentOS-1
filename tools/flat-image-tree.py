@@ -99,8 +99,8 @@ class KernelImage(Image):
             self.load = "<0x61008000>"
             self.entry = "<0x61008000>"
         elif arch == 'arm64':
-            self.load = "<0x80080000>"
-            self.entry = "<0x80080000>"
+            self.load = "<0x07000000>"
+            self.entry = "<0x07000000>"
 
     def write(self, f):
         self.start_image(f)
@@ -137,8 +137,8 @@ class DtbImage(Image):
     def __init__(self, fdata, arch):
         Image.__init__(self, "flat_dt", fdata, compression="none")
 	if arch == 'arm64':
-		self.load = "<0x90000000>"
-		self.entry ="<0x90000000>"
+		self.load = "<0x06000000>"
+		self.entry ="<0x06000000>"
 
     def write(self, f):
         self.start_image(f)
