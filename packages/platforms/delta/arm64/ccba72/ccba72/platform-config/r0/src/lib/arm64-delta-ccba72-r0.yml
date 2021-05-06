@@ -27,7 +27,7 @@ arm64-delta-ccba72-r0:
         onl_platform=$onl_platform
 
     environment:
-    - device: /dev/mtd-uboot-env
+    - device: /dev/mtd1
       env_offset: 0x00000000
       env_size: 0x00010000
       sector_size: 0x00010000
