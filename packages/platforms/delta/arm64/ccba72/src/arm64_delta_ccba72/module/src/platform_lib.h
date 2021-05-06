@@ -172,14 +172,13 @@ typedef enum plat_led_id {
 
 /* LED related data */
 typedef enum led_light_mode {
-    LED_MODE_RGB = 0,
-    LED_MODE_GB,
-    LED_MODE_RB,
-    LED_MODE_BLUE,
-    LED_MODE_RG,
-    LED_MODE_GREEN,
-    LED_MODE_RED,
-    LED_MODE_OFF,
+    LED_MODE_BLUE = 3,
+    LED_MODE_GREEN = 5,
+    LED_MODE_RED = 6,
+    LED_MODE_OFF = 7,
+    LED_MODE_BLUE_BLINKING = 11,
+    LED_MODE_GREEN_BLINKING = 13,
+    LED_MODE_RED_BLINKING = 14,
     LED_MODE_MAX
 } led_light_mode_t;
 

@@ -32,7 +32,6 @@
 /* CPLD Register Define */
 #define CCBA72_CPLD_SLAVE_ADDR		0x42
 
-#define CCBA72_CPLD_REG_HW_VER		0x00 /* RO */
 #define CCBA72_CPLD_REG_CPLD_VER	0x02 /* RO */
 #define CCBA72_CPLD_REG_LED_STATUS	0x03 /* RW */
 #define CCBA72_CPLD_REG_PWR_STATUS	0x04 /* RO */
@@ -45,42 +44,47 @@
 #define CCBA72_CPLD_REG_OTHER_OUTPUT  	0x0B /* RW */
 #define CCBA72_CPLD_REG_WDT_FUNC	0x10 /* RW */
 #define CCBA72_CPLD_REG_WDT_TIMER	0x11 /* RW */
+#define CCBA72_CPLD_REG_ORING_STATUS	0x0C /* RO */
 
-#define CPLD_REG_BIT_LED_RED		0
-#define CPLD_REG_BIT_LED_GREEN		1
-#define CPLD_REG_BIT_LED_BLUE		2
+#define CPLD_REG_BIT_LED_RED            0
+#define CPLD_REG_BIT_LED_GREEN          1
+#define CPLD_REG_BIT_LED_BLUE           2
+#define CPLD_REG_BIT_LED_BLINKING       3
 
-#define CPLD_REG_BIT_PG_SYS		0
-#define CPLD_REG_BIT_PG_ADAPTER		1
-#define CPLD_REG_BIT_PG_B2B		2
-#define CPLD_REG_BIT_PG_ALL		3
+#define CPLD_REG_BIT_PG_SYS             0
+#define CPLD_REG_BIT_PG_ADAPTER         1
+#define CPLD_REG_BIT_PG_B2B             2
+#define CPLD_REG_BIT_PG_ALL             3
 
-#define CPLD_REG_BIT_PWR_CTL_B2B	0
+#define CPLD_REG_BIT_PWR_CTL_B2B        0
 
-#define CPLD_REG_BIT_INTR_PM		0
-#define CPLD_REG_BIT_INTR_TMP1075	1
-#define CPLD_REG_BIT_INTR_USB		2
-#define CPLD_REG_BIT_INTR_B2B_ACC_1	3
-#define CPLD_REG_BIT_INTR_B2B_ACC_2	4
-#define CPLD_REG_BIT_INTR_CPU		5
+#define CPLD_REG_BIT_INTR_PM            0
+#define CPLD_REG_BIT_INTR_TMP1075       1
+#define CPLD_REG_BIT_INTR_USB           2
+#define CPLD_REG_BIT_INTR_B2B_ACC_1     3
+#define CPLD_REG_BIT_INTR_B2B_ACC_2     4
+#define CPLD_REG_BIT_INTR_CPU           5
 
-#define CPLD_REG_BIT_INTR_OUTPUT	0
+#define CPLD_REG_BIT_INTR_OUTPUT        0
 
-#define CPLD_REG_BIT_RESET_CPU_88F7040	0
-#define CPLD_REG_BIT_RESET_PHY_88E1512	2
-#define CPLD_REG_BIT_RESET_SPI		3
-#define CPLD_REG_BIT_RESET_ALL		4
+#define CPLD_REG_BIT_RESET_CPU_88F7040  0
+#define CPLD_REG_BIT_RESET_PHY_88E1512  1
+#define CPLD_REG_BIT_RESET_SPI          2
+#define CPLD_REG_BIT_RESET_ALL          3
 
-#define CPLD_REG_BIT_RESET_FROM_B2B	0
-#define CPLD_REG_BIT_RESET_FROM_CPU	1
+#define CPLD_REG_BIT_RESET_FROM_CPU     0
+#define CPLD_REG_BIT_RESET_FROM_B2B     1
 
-#define CPLD_REG_BIT_ACS_STATUS		0
-#define CPLD_REG_BIT_POE_MODE		1
+#define CPLD_REG_BIT_ACS_STATUS         0
+#define CPLD_REG_BIT_POE_MODE           1
 
-#define CPLD_REG_BIT_SPI_WP		0
+#define CPLD_REG_BIT_SPI_WP             0
 
-#define CPLD_REG_BIT_WDT_ENABLE		0
-#define CPLD_REG_BIT_WDT_CLEAR		1
+#define CPLD_REG_BIT_WDT_ENABLE         0
+#define CPLD_REG_BIT_WDT_CLEAR          1
+
+#define CPLD_REG_BIT_ORING_STATUS_1     0
+#define CPLD_REG_BIT_ORING_STATUS_2     1
 
 #define I2C_RW_RETRY_COUNT		10
 #define I2C_RW_RETRY_INTERVAL		60 /* ms */
@@ -107,7 +111,6 @@ struct ccba72_cpld_data {
 	u8 reg_data;
 
 	/* register values */
-	u8 hw_ver;		/* Reg: 0x00 RO */
 	u8 cpld_ver;		/* Reg: 0x02 RO */
 	u8 led_status;		/* Reg: 0x03 RW */
 	u8 pwr_status;		/* Reg: 0x04 RO */
@@ -120,12 +123,12 @@ struct ccba72_cpld_data {
 	u8 other_output;	/* Reg: 0x0B RW */
 	u8 wdt_func;		/* Reg: 0x10 RW */
 	u8 wdt_timer;		/* Reg: 0x11 RW */
+	u8 oring_status;	/* Reg: 0x0C RO */
 };
 
 static struct ccba72_cpld_data *ccba72_cpld_update_device(struct device *dev);
 
 enum ccba72_cpld_attributes {
-	HW_VERSION,
 	CPLD_VERSION,
 	LED_STATUS,
 	WDT_TIMER
@@ -319,10 +322,6 @@ static ssize_t reg_show(struct device *dev,
 	int res;
 
 	switch (sda->index) {
-	case HW_VERSION:
-		reg_data = data->hw_ver & 0x0f;
-		res = sprintf(buf, "0x%x\n", reg_data);
-		break;
 	case CPLD_VERSION:
 		reg_data = data->cpld_ver & 0xff;
 		res = sprintf(buf, "0x%x\n", reg_data);
@@ -377,8 +376,6 @@ static ssize_t reg_store(struct device *dev,
 	return err < 0 ? err : count;
 }
 
-/* HW Version, Register 0x00, Read Only */
-static SENSOR_DEVICE_ATTR_RO(hw_version, reg, HW_VERSION);
 /* CPLD Version, Register 0x02, Read Only */
 static SENSOR_DEVICE_ATTR_RO(cpld_version, reg, CPLD_VERSION);
 /* LED Status, Register 0x03, Read and Write */
@@ -425,6 +422,9 @@ static ssize_t bit_show(struct device *dev,
 		break;
 	case CCBA72_CPLD_REG_WDT_TIMER:
 		reg_data = data->wdt_timer;
+		break;
+	case CCBA72_CPLD_REG_ORING_STATUS:
+		reg_data = data->oring_status;
 		break;
 	default:
 		dev_err(dev, "Unknown offset 0x%x in bit_show\n", reg_offset);
@@ -582,10 +582,17 @@ static SENSOR_DEVICE_ATTR_2_RW(wdt_clear, bit,
 			       CCBA72_CPLD_REG_WDT_FUNC,
 			       CPLD_REG_BIT_WDT_CLEAR);
 
+/* Oring Status, Register 0x0C, Read Only */
+static SENSOR_DEVICE_ATTR_2_RW(oring_status_1, bit,
+			       CCBA72_CPLD_REG_ORING_STATUS,
+			       CPLD_REG_BIT_ORING_STATUS_1);
+static SENSOR_DEVICE_ATTR_2_RW(oring_status_2, bit,
+			       CCBA72_CPLD_REG_ORING_STATUS,
+			       CPLD_REG_BIT_ORING_STATUS_2);
+
 static struct attribute *ccba72_cpld_attributes[] = {
 	&sensor_dev_attr_reg_offset.dev_attr.attr,
 	&sensor_dev_attr_reg_data.dev_attr.attr,
-	&sensor_dev_attr_hw_version.dev_attr.attr,
 	&sensor_dev_attr_cpld_version.dev_attr.attr,
 	&sensor_dev_attr_led_status.dev_attr.attr,
 	&sensor_dev_attr_powergood_sys.dev_attr.attr,
@@ -612,6 +619,8 @@ static struct attribute *ccba72_cpld_attributes[] = {
 	&sensor_dev_attr_wdt_disable.dev_attr.attr,
 	&sensor_dev_attr_wdt_clear.dev_attr.attr,
 	&sensor_dev_attr_wdt_timer.dev_attr.attr,
+	&sensor_dev_attr_oring_status_1.dev_attr.attr,
+	&sensor_dev_attr_oring_status_2.dev_attr.attr,
 	NULL
 };
 
@@ -733,8 +742,6 @@ static struct ccba72_cpld_data *ccba72_cpld_update_device(
 	mutex_lock(&data->update_lock);
 
 	if(time_after(jiffies, data->last_updated + HZ) || !data->valid) {
-		data->hw_ver = ccba72_cpld_read_internal(client,
-					CCBA72_CPLD_REG_HW_VER);
 		data->cpld_ver = ccba72_cpld_read_internal(client,
 					CCBA72_CPLD_REG_CPLD_VER);
 		data->led_status = ccba72_cpld_read_internal(client,
@@ -759,6 +766,8 @@ static struct ccba72_cpld_data *ccba72_cpld_update_device(
 					CCBA72_CPLD_REG_WDT_FUNC);
 		data->wdt_timer = ccba72_cpld_read_internal(client,
 					CCBA72_CPLD_REG_WDT_TIMER);
+		data->oring_status = ccba72_cpld_read_internal(client,
+					CCBA72_CPLD_REG_ORING_STATUS);
 		data->last_updated = jiffies;
 		data->valid = 1;
 	}

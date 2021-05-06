@@ -36,12 +36,11 @@ static plat_led_t plat_leds[] = {
         .mode = {
             PLAT_LED_MODE(ONLP_LED_MODE_OFF, LED_MODE_OFF),
             PLAT_LED_MODE(ONLP_LED_MODE_RED, LED_MODE_RED),
-	    PLAT_LED_MODE(ONLP_LED_MODE_RED, LED_MODE_RB),
+	    PLAT_LED_MODE(ONLP_LED_MODE_RED_BLINKING, LED_MODE_RED_BLINKING),
 	    PLAT_LED_MODE(ONLP_LED_MODE_GREEN, LED_MODE_GREEN),
-	    PLAT_LED_MODE(ONLP_LED_MODE_GREEN, LED_MODE_RGB),
-            PLAT_LED_MODE(ONLP_LED_MODE_GREEN, LED_MODE_GB),
-	    PLAT_LED_MODE(ONLP_LED_MODE_GREEN, LED_MODE_RG),
+	    PLAT_LED_MODE(ONLP_LED_MODE_GREEN_BLINKING, LED_MODE_GREEN_BLINKING),
 	    PLAT_LED_MODE(ONLP_LED_MODE_BLUE, LED_MODE_BLUE),
+	    PLAT_LED_MODE(ONLP_LED_MODE_BLUE_BLINKING, LED_MODE_BLUE_BLINKING),
         },
         PLAT_LED_INTERNAL_DEF,
     },
@@ -88,10 +87,27 @@ static uint32_t _onlp_cap_create(led_mode_t *mod)
 
     while (mod->onlp_led_mode >= 0) {
         switch (mod->onlp_led_mode) {
-        case ONLP_LED_MODE_OFF: cap |= ONLP_LED_CAPS_ON_OFF; break;
-        case ONLP_LED_MODE_RED:	cap |= ONLP_LED_CAPS_RED; break;
-        case ONLP_LED_MODE_GREEN: cap |= ONLP_LED_CAPS_GREEN; break;
-	case ONLP_LED_MODE_BLUE: cap |= ONLP_LED_CAPS_BLUE; break;
+        case ONLP_LED_MODE_OFF:
+	    cap |= ONLP_LED_CAPS_ON_OFF;
+	    break;
+        case ONLP_LED_MODE_RED:
+	    cap |= ONLP_LED_CAPS_RED;
+	    break;
+        case ONLP_LED_MODE_RED_BLINKING:
+	    cap |= ONLP_LED_CAPS_RED_BLINKING;
+	    break;
+        case ONLP_LED_MODE_GREEN:
+	    cap |= ONLP_LED_CAPS_GREEN;
+	    break;
+        case ONLP_LED_MODE_GREEN_BLINKING:
+	    cap |= ONLP_LED_CAPS_GREEN_BLINKING;
+	    break;
+	case ONLP_LED_MODE_BLUE:
+	    cap |= ONLP_LED_CAPS_BLUE;
+	    break;
+	case ONLP_LED_MODE_BLUE_BLINKING:
+	    cap |= ONLP_LED_CAPS_BLUE_BLINKING;
+	    break;
         }
         mod++;
     }

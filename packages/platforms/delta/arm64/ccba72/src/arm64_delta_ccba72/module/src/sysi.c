@@ -63,7 +63,7 @@ onlp_sysi_platform_info_get(onlp_platform_info_t* pi)
 {
     int rc = ONLP_STATUS_OK;
     int len;
-    char cpld_ver[4], hw_ver[4];
+    char cpld_ver[4];
     char fullpath[PATH_MAX] = {0};
     plat_info_t *plat_info = &gPlat_info[gPlat_id];
 
@@ -74,15 +74,6 @@ onlp_sysi_platform_info_get(onlp_platform_info_t* pi)
         return rc;
 
     pi->cpld_versions = aim_fstrdup("CPLD Version = %s", cpld_ver);
-
-    /* Hardware Version */
-    sprintf(fullpath, "%s/hw_version", plat_info->cpld_path);
-    if ((rc = plat_os_file_read_str(hw_ver, sizeof(hw_ver),
-                                     &len, fullpath)) < 0)
-        return rc;
-
-    pi->other_versions = aim_fstrdup("Hardware Version = %s", hw_ver);
-
     return rc;
 }
 
