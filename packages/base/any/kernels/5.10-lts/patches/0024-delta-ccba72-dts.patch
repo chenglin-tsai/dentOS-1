@@ -3,7 +3,7 @@ new file mode 100644
 index 000000000..597d0ae16
 --- /dev/null
 +++ b/arch/arm64/boot/dts/marvell/delta-ccba72.dts
-@@ -0,0 +1,270 @@
+@@ -0,0 +1,275 @@
 +/*
 + * Copyright (C) 2016 Marvell Technology Group Ltd.
 + *
@@ -167,6 +167,11 @@ index 000000000..597d0ae16
 +	clock-frequency = <100000>;
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&cp0_mss_i2c_pins>;
++
++	eeprom_at24: at24@57 {
++		compatible = "atmel,24c64";
++		reg = <0x57>;
++	};
 +};
 +
 +&cp0_i2c0 {
